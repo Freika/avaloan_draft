@@ -1,5 +1,6 @@
 require 'date'
 require 'sinatra'
+require 'chronic'
 
 get '/' do
   erb :index, locals: { loans: loans, avaloans: calculate }
@@ -68,7 +69,8 @@ def calculate
         rate: loan[:rate],
         payment: loan[:payment],
         interest: interest,
-        extra_payment: current_loan_extra_payment
+        extra_payment: current_loan_extra_payment,
+        month_number: n
       }
     end
 

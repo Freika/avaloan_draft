@@ -27,6 +27,7 @@
     <th>Payment</th>
     <th>Interest</th>
     <th>Extra payments</th>
+    <th>Repaid month number</th>
   </tr>
   <% avaloans.sort_by {|a| [a[:rate], a[:title], a[:balance]] }.reverse.each do |loan| %>
     <tr>
@@ -36,6 +37,7 @@
       <td><%= loan[:payment] %></td>
       <td><%= loan[:interest] %></td>
       <td><%= loan[:extra_payment] %></td>
+      <td><%= Chronic.parse("#{loan[:month_number]} months from now").to_time.strftime("%m/%Y") %> (<%= loan[:month_number] %> months from now)</td>
     </tr>
   <% end %>
 </table>
