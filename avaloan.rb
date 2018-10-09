@@ -3,7 +3,7 @@ require 'sinatra'
 require 'chronic'
 
 get '/' do
-  erb :index, locals: { loans: loans, avaloans: calculate }
+  erb :index, locals: { loans: loans, payments: calculate }
 end
 
 def loans
@@ -45,7 +45,7 @@ def calculate
   avaloans = loans.sort_by { |d| d[:rate] }.reverse
 
   p avaloans
-  results = []
+  payments = []
 
   p "First extra payment is #{extra_payment}"
 
@@ -75,7 +75,7 @@ def calculate
     end
 
     avaloans.each do |loan|
-      results << loan
+      payments << loan
       # Если платеж по долгу меньше суммы платежа + экстра пеймента
       if avaloans[0] == loan && loan[:balance] < loan[:payment] + extra_payment
         # То вычитаем из этой суммы платеж и возвращаем остаток
@@ -98,5 +98,9 @@ def calculate
     p avaloans
   end
 
-  results
+  payments.sort_by! { |p| p[:month_number] }
+
+  p payments
+
+  { payments: payments, months_number: payments.first[:month_number] }
 end
