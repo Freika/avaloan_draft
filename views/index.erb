@@ -53,18 +53,18 @@
       <th><%= loan[:title] %></th>
     <% end %>
   </tr>
-  <% payments[:sorted_payments].each do |month| %>
-    <% month.each do |k, payments| %>
+  <%# <% payments[:sorted_payments].each do |month| %>
+    <%# <% month.each do |k, payments| %>
       <tr>
-        <td><%= k %></td>
-        <% payments.each do |payment| %>
-          <td>
-            <%= payment[:balance] %>
-          </td>
-        <% end %>
-      </tr>
-    <% end %>
-  <% end %>
+        <%# <td><%= k %></td>
+        <%# <% payments.each do |payment| %>
+          <%# <td> %>
+            <%# <%= payment[:balance] %>
+          <%# </td> %>
+        <%# <% end %>
+      <%# </tr> %>
+    <%# <% end %>
+  <%# <% end %>
   <tr>
 
   </tr>
