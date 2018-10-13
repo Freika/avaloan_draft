@@ -30,7 +30,6 @@
     <th>Extra payments</th>
   </tr>
   <% payments[:payments].each do |loan| %>
-  <%# avaloans.sort_by {|a| [a[:rate], a[:title], a[:balance]] }.reverse.each do |loan| %>
     <tr>
       <td><%= Chronic.parse("#{loan[:month_number]} months from now").to_time.strftime("%b %Y") %> (<%= loan[:month_number] %> months from now)</td>
       <td><%= loan[:title] %></td>
@@ -43,28 +42,30 @@
   <% end %>
 </table>
 
-<%= payments[:months_number] %>
-
 <hr>
 <h3>Sorted payments</h3>
 
 <table border=1>
   <tr>
-    <th></th>
-    <% payments[:payments].map { |p| p[:title] }.uniq.each do |title| %>
-      <td>
-        <%= title %>
-      </td>
+    <th>Month</th>
+    <%# <th>Extra payment</th> %>
+    <% loans.sort_by { |d| d[:rate] }.reverse.each do |loan| %>
+      <th><%= loan[:title] %></th>
     <% end %>
   </tr>
+  <%# <% payments[:sorted_payments].each do |month| %>
+    <%# <% month.each do |k, payments| %>
+      <tr>
+        <%# <td><%= k %></td>
+        <%# <% payments.each do |payment| %>
+          <%# <td> %>
+            <%# <%= payment[:balance] %>
+          <%# </td> %>
+        <%# <% end %>
+      <%# </tr> %>
+    <%# <% end %>
+  <%# <% end %>
   <tr>
-    <th>Month</th>
-    <th>Extra payment</th>
+
   </tr>
-  <% payments[:months_number].times do |month| %>
-    <% month_payments = payments[:payments].select { |p| p[:month_number] == month } %>
-    <tr>
-      <td><%= Chronic.parse("#{month} months from now").to_time.strftime("%b %Y") %></td>
-    </tr>
-  <% end %>
 </table>
