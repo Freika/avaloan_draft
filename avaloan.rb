@@ -57,13 +57,19 @@ def calculate
       if loan[:balance] < loan[:payment]
         new_balance = 0
         extra_payment += loan[:payment] - loan[:balance]
+        p "FIRST condition worked on #{loan[:title]}, MONTH #{n}"
       elsif loan[:balance] < loan[:payment] + extra_payment
         new_balance = 0
-        extra_payment = loan[:payment] + extra_payment - loan[:balance]
+        current_loan_extra_payment = extra_payment
+        extra_payment = current_loan_extra_payment - loan[:balance]
+        p "SECOND condition worked on #{loan[:title]}, MONTH #{n}"
       elsif avalanchable?(avaloans, loan)
         new_balance = loan[:balance] - (loan[:payment] + extra_payment)
+        current_loan_extra_payment = extra_payment
+        p "THIRD condition worked on #{loan[:title]}, MONTH #{n}"
       else
         new_balance = loan[:balance] - loan[:payment]
+        p "FOURTH condition worked on #{loan[:title]}, MONTH #{n}"
       end
 
       loan[:month_number] = n || 0
@@ -85,29 +91,34 @@ def calculate
     break if avaloans.map { |s| s[:balance] }.sum <= 0
   end
 
-  p payments
+  # p payments
 
   payments.sort_by! { |p| p[:month_number] }
 
   months = payments.map { |payment| payment[:month_number] }.uniq
 
-  sorted_payments = []
+  monthly_sorted_payments = []
 
-  months.each do |n|
-    ps = payments.select { |p| p[:month_number] == n }.sort_by { |d| d[:rate] }.reverse
+  months.each do |month|
+    month_payments = payments.select { |p| p[:month_number] == month }.sort_by { |d| d[:rate] }.reverse
 
-    sorted_payments << { n => ps }
+    monthly_sorted_payments << { month => month_payments }
   end
 
-  p sorted_payments
+  # p monthly_sorted_payments
 
   {
     payments: payments,
     months_number: payments.first[:month_number],
-    # sorted_payments: sorted_payments
+    monthly_sorted_payments: monthly_sorted_payments
   }
 end
 
 def avalanchable?(loans, current_loan)
   loans.sort_by { |d| [d[:rate], d[:balance]] }.last == current_loan
 end
+
+# Todo:
+# 1. Correctly assign extra payment to most expensive loan
+# 2. Don't mix payments
+# 3. Don't subtract extra payment from non-assigned loans
