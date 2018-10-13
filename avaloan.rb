@@ -100,7 +100,21 @@ def calculate
 
   payments.sort_by! { |p| p[:month_number] }
 
-  p payments
+  months = payments.map { |payment| payment[:month_number] }.uniq
 
-  { payments: payments, months_number: payments.first[:month_number] }
+  sorted_payments = []
+
+  months.each do |n|
+    ps = payments.select { |p| p[:month_number] == n }.sort_by { |d| d[:rate] }.reverse
+
+    sorted_payments << { n => ps }
+  end
+
+  p sorted_payments
+
+  {
+    payments: payments,
+    months_number: payments.first[:month_number],
+    sorted_payments: sorted_payments
+  }
 end
