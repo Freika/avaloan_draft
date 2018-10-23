@@ -1,0 +1,40 @@
+link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" rel="stylesheet" /
+script crossorigin="anonymous" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+.container
+  table.table.table-bordered.table-hover
+    tr
+      th Title
+      th Balance
+      th Rate
+      th Payment
+      th Interest
+    - loans.each do |loan|
+    tr
+      td = loan[:title]
+      td = loan[:balance]
+      td = loan[:rate]
+      td = loan[:payment]
+      td = loan[:interest]
+  hr/
+  h3 Payments
+  table.table.table-bordered.table-hover
+    tr
+      th Repaid month number
+      th Title
+      th Balance
+      th Rate
+      th Payment
+      th Interest
+      th Extra payments
+    - payments[:payments].each do |loan|
+    tr
+      td
+        = Chronic.parse("\# loan[:month_number] months from now").to_time.strftime("%b %Y")
+        => loan[:month_number]
+        | months from now
+      td = loan[:title]
+      td = loan[:balance]
+      td = loan[:rate]
+      td = loan[:payment]
+      td = loan[:interest]
+      td = loan[:extra_payment]
