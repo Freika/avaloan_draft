@@ -1,71 +1,76 @@
-<table border=1>
-  <tr>
-    <th>Title</th>
-    <th>Balance</th>
-    <th>Rate</th>
-    <th>Payment</th>
-    <th>Interest</th>
-  </tr>
-  <% loans.each do |loan| %>
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+
+<div class="container">
+  <table class='table table-bordered table-hover'>
     <tr>
-      <td><%= loan[:title] %></td>
-      <td><%= loan[:balance] %></td>
-      <td><%= loan[:rate] %></td>
-      <td><%= loan[:payment] %></td>
-      <td><%= loan[:interest] %></td>
+      <th>Title</th>
+      <th>Balance</th>
+      <th>Rate</th>
+      <th>Payment</th>
+      <th>Interest</th>
     </tr>
-  <% end %>
-</table>
-
-<hr>
-<h3>Payments</h3>
-<table border=1>
-  <tr>
-    <th>Repaid month number</th>
-    <th>Title</th>
-    <th>Balance</th>
-    <th>Rate</th>
-    <th>Payment</th>
-    <th>Interest</th>
-    <th>Extra payments</th>
-  </tr>
-  <% payments[:payments].each do |loan| %>
-    <tr>
-      <td><%= Chronic.parse("#{loan[:month_number]} months from now").to_time.strftime("%b %Y") %> (<%= loan[:month_number] %> months from now)</td>
-      <td><%= loan[:title] %></td>
-      <td><%= loan[:balance] %></td>
-      <td><%= loan[:rate] %>%</td>
-      <td><%= loan[:payment] %></td>
-      <td><%= loan[:interest] %></td>
-      <td><%= loan[:extra_payment] %></td>
-    </tr>
-  <% end %>
-</table>
-
-<hr>
-<h3>Sorted payments</h3>
-
-<table border=1>
-  <tr>
-    <th>Month</th>
-    <%# <th>Extra payment</th> %>
-    <% loans.sort_by { |d| d[:rate] }.reverse.each do |loan| %>
-      <th><%= loan[:title] %></th>
-    <% end %>
-  </tr>
-  <%# <% payments[:sorted_payments].each do |month| %>
-    <%# <% month.each do |k, payments| %>
+    <% loans.each do |loan| %>
       <tr>
-        <%# <td><%= k %></td>
-        <%# <% payments.each do |payment| %>
-          <%# <td> %>
-            <%# <%= payment[:balance] %>
-          <%# </td> %>
-        <%# <% end %>
-      <%# </tr> %>
-    <%# <% end %>
-  <%# <% end %>
-  <tr>
+        <td><%= loan[:title] %></td>
+        <td><%= loan[:balance] %></td>
+        <td><%= loan[:rate] %></td>
+        <td><%= loan[:payment] %></td>
+        <td><%= loan[:interest] %></td>
+      </tr>
+    <% end %>
+  </table>
 
-  </tr>
-</table>
+  <hr>
+  <h3>Payments</h3>
+  <table class='table table-bordered table-hover'>
+    <tr>
+      <th>Repaid month number</th>
+      <th>Title</th>
+      <th>Balance</th>
+      <th>Rate</th>
+      <th>Payment</th>
+      <th>Interest</th>
+      <th>Extra payments</th>
+    </tr>
+    <% payments[:payments].each do |loan| %>
+      <tr>
+        <td><%= Chronic.parse("#{loan[:month_number]} months from now").to_time.strftime("%b %Y") %> (<%= loan[:month_number] %> months from now)</td>
+        <td><%= loan[:title] %></td>
+        <td><%= loan[:balance] %></td>
+        <td><%= loan[:rate] %>%</td>
+        <td><%= loan[:payment] %></td>
+        <td><%= loan[:interest] %></td>
+        <td><%= loan[:extra_payment] %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <hr>
+  <h3>Sorted payments</h3>
+
+  <table class='table table-bordered table-hover'>
+    <tr>
+      <th>Month</th>
+      <%# <th>Extra payment</th> %>
+      <% loans.sort_by { |d| d[:rate] }.reverse.each do |loan| %>
+        <th><%= loan[:title] %></th>
+      <% end %>
+    </tr>
+    <%# <% payments[:sorted_payments].each do |month| %>
+      <%# <% month.each do |k, payments| %>
+        <tr>
+          <%# <td><%= k %></td>
+          <%# <% payments.each do |payment| %>
+            <%# <td> %>
+              <%# <%= payment[:balance] %>
+            <%# </td> %>
+          <%# <% end %>
+        <%# </tr> %>
+      <%# <% end %>
+    <%# <% end %>
+    <tr>
+
+    </tr>
+  </table>
+
+</div>
