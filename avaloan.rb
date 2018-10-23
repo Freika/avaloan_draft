@@ -1,6 +1,7 @@
 require 'date'
 require 'sinatra'
 require 'chronic'
+require 'slim'
 
 get '/' do
   erb :index, locals: { loans: loans, payments: calculate }
