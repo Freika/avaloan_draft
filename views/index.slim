@@ -3,38 +3,57 @@ script crossorigin="anonymous" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2I
 .container
   table.table.table-bordered.table-hover
     tr
-      th Title
-      th Balance
-      th Rate
-      th Payment
-      th Interest
-    - loans.each do |loan|
-    tr
-      td = loan[:title]
-      td = loan[:balance]
-      td = loan[:rate]
-      td = loan[:payment]
-      td = loan[:interest]
-  hr/
-  h3 Payments
-  table.table.table-bordered.table-hover
-    tr
-      th Repaid month number
-      th Title
-      th Balance
-      th Rate
-      th Payment
-      th Interest
-      th Extra payments
-    - payments[:payments].each do |loan|
-    tr
-      td
-        = Chronic.parse("\# loan[:month_number] months from now").to_time.strftime("%b %Y")
-        => loan[:month_number]
-        | months from now
-      td = loan[:title]
-      td = loan[:balance]
-      td = loan[:rate]
-      td = loan[:payment]
-      td = loan[:interest]
-      td = loan[:extra_payment]
+      th Month
+      th Snowball
+      - loans.each do |loan|
+        th = loan[:title]
+
+    - payments.each do |month|
+      tr
+        td = month.first.first
+        td
+        / = byebug
+        / = month[month.first.first].first
+        - month[month.first.first].each do |payment|
+          td = payment[:current_payment]
+      / - loans.each do |loan|
+        td = loan[:month_number]
+
+  / table.table.table-bordered.table-hover
+  /   tr
+  /     th Title
+  /     th Balance
+  /     th Rate
+  /     th Payment
+  /     th Interest
+  /   - loans.each do |loan|
+  /   tr
+  /     td = loan[:title]
+  /     td = loan[:balance]
+  /     td = loan[:rate]
+  /     td = loan[:payment]
+  /     td = loan[:interest]
+  / hr/
+  / h3 Payments
+  / table.table.table-bordered.table-hover
+  /   tr
+  /     th Repaid month number
+  /     th Title
+  /     th Balance
+  /     th Rate
+  /     th Payment
+  /     th Interest
+  /     th Extra payments
+  /   - payments[:payments].each do |loan|
+  /   tr
+  /     td
+  /       = Chronic.parse("\# loan[:month_number] months from now").to_time.strftime("%b %Y")
+  /       => loan[:month_number]
+  /       | months from now
+  /     td = loan[:title]
+  /     td = loan[:balance]
+  /     td = loan[:rate]
+  /     td = loan[:payment]
+  /     td = loan[:interest]
+  /     td = loan[:extra_payment]
+
