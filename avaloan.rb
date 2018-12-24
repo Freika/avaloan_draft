@@ -52,7 +52,7 @@ end
 
 def calculate
   balance_date = Date.today # Дата, на которую указан баланс долгов
-  monthly_payment = 35_000.0 # Ежемесячный платеж на все долги
+  monthly_payment = 40_000.0 # Ежемесячный платеж на все долги
   total_debt = loans.map { |d| d[:balance] }.sum # Общая сумма всех долгов
   total_monthly_payment = loans.map { |d| d[:payment] }.sum # Общая сумма всех минимальных платежей
   extra_payment = monthly_payment - total_monthly_payment # Initial snowball, оставшееся после минимальных платежей
@@ -70,31 +70,13 @@ def calculate
     # Для каждого отсортированного долга запускаем цикл
     avaloans.map! do |loan|
       # Комиссия по платежу = баланс * проценты / 12 месяцев
-      interest = (loan[:balance] * (loan[:rate] * 0.01) / 12).round(2)
+      interest = calculate_interest(loan)
 
       # Если этот долг первый в списке, то сноуболл этого цикла равен сноуболлу
       current_loan_extra_payment = avaloans[0] == loan ? extra_payment : 0
 
-      # Если баланс меньше платежа
-      if loan[:balance] < loan[:payment]
-        # То полностью выплачиваем долг
-        new_balance = 0
-        # И добавляем к сноуболлу разницу платежа и баланса
-        extra_payment += loan[:payment] - loan[:balance]
-      # Если баланс меньше, чем платёж + сноуболл
-      elsif loan[:balance] < loan[:payment] + extra_payment
-        # То полностью выплачиваем долг
-        new_balance = 0
-        # и из суммы платежа и сноуболла вычитаем баланс
-        extra_payment = loan[:payment] + extra_payment - loan[:balance]
-      # если аваланчабл (задокументить)
-      elsif avalanchable?(avaloans, loan)
-        # То вычитаем из баланса сумму платежа и сноуболла
-        new_balance = loan[:balance] - (loan[:payment] + extra_payment)
-      else
-        # вычитаем из баланса платеж
-        new_balance = loan[:balance] - loan[:payment]
-      end
+      # Считаем детали платежа
+      payment_details = calculate_payment_details(loan, avaloans, extra_payment)
 
       # номер месяца устанавливаем равным номеру цикла или 0, если почему-то номера цикла нет
       loan[:month_number] = n || 0
@@ -102,13 +84,15 @@ def calculate
       # В список платежей помещаем обновленное тело долга
       payments << loan
 
+      current_payment = loan[:balance] - payment_details[:new_balance]
+
       # Возвращаем результат вычисления для текущего долга.
       {
         title: loan[:title],
-        balance: new_balance,
+        balance: payment_details[:new_balance],
         rate: loan[:rate],
         payment: loan[:payment],
-        current_payment: loan[:payment] + current_loan_extra_payment,
+        current_payment: current_payment,
         interest: interest,
         extra_payment: current_loan_extra_payment,
         month_number: n
@@ -150,6 +134,38 @@ end
 
 def avalanchable?(loans, current_loan)
   loans.sort_by { |d| [d[:rate], d[:balance]] }.last == current_loan
+end
+
+def calculate_interest(loan)
+  (loan[:balance] * (loan[:rate] * 0.01) / 12).round(2)
+end
+
+def calculate_payment_details(loan, avaloans, extra_payment)
+  # Если баланс меньше платежа
+  if loan[:balance] < loan[:payment]
+    # То полностью выплачиваем долг
+    new_balance = 0
+    # И добавляем к сноуболлу разницу платежа и баланса
+    extra_payment += loan[:payment] - loan[:balance]
+  # Если баланс меньше, чем платёж + сноуболл
+  elsif loan[:balance] < loan[:payment] + extra_payment
+    # То полностью выплачиваем долг
+    new_balance = 0
+    # и из суммы платежа и сноуболла вычитаем баланс
+    extra_payment = loan[:payment] + extra_payment - loan[:balance]
+  # если аваланчабл (задокументить)
+  elsif avalanchable?(avaloans, loan)
+    # То вычитаем из баланса сумму платежа и сноуболла
+    new_balance = loan[:balance] - (loan[:payment] + extra_payment)
+  else
+    # вычитаем из баланса платеж
+    new_balance = loan[:balance] - loan[:payment]
+  end
+
+  {
+    new_balance: new_balance,
+    extra_payment: extra_payment || 0
+  }
 end
 
 calculate.each { |c| p c; p '' }
