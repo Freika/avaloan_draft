@@ -133,7 +133,8 @@ def calculate
 end
 
 def avalanchable?(loans, current_loan)
-  loans.sort_by { |d| [d[:rate], d[:balance]] }.last == current_loan
+  # Текущий долг — самый дорогой?
+  loans.sort_by { |l| [l[:rate], l[:balance]] }.last == current_loan
 end
 
 def calculate_interest(loan)
@@ -141,19 +142,35 @@ def calculate_interest(loan)
 end
 
 def calculate_payment_details(loan, avaloans, extra_payment)
-  # Если баланс меньше платежа
-  if loan[:balance] < loan[:payment]
+  # Если платеж больше баланса
+  if loan[:payment] > loan[:balance]
     # То полностью выплачиваем долг
     new_balance = 0
     # И добавляем к сноуболлу разницу платежа и баланса
     extra_payment += loan[:payment] - loan[:balance]
-  # Если баланс меньше, чем платёж + сноуболл
-  elsif loan[:balance] < loan[:payment] + extra_payment
+
+    ###
+    ### Находим следующий по дороговизне долг
+    next_loan = (avaloans - [loan]).last
+    calculate_payment_details(next_loan, avaloans, extra_payment)
+    ### и запускаем этот же метод для него
+    ###
+
+  # Если платёж + сноуболл больше, чем баланс
+  elsif loan[:payment] + extra_payment > loan[:balance]
     # То полностью выплачиваем долг
     new_balance = 0
     # и из суммы платежа и сноуболла вычитаем баланс
     extra_payment = loan[:payment] + extra_payment - loan[:balance]
-  # если аваланчабл (задокументить)
+
+    ###
+    next_loan = (avaloans - [loan]).last
+    calculate_payment_details(next_loan, avaloans, extra_payment)
+    ### Находим следующий по дороговизне долг
+    ### и запускаем этот же метод для него
+    ###
+
+  # если текущий долг — самый дорогой?
   elsif avalanchable?(avaloans, loan)
     # То вычитаем из баланса сумму платежа и сноуболла
     new_balance = loan[:balance] - (loan[:payment] + extra_payment)
