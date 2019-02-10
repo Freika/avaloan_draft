@@ -1,4 +1,5 @@
 require './month_calculator'
+require 'byebug'
 
 class AvalancheCalculator
   def initialize(loans, sum)
@@ -14,11 +15,21 @@ class AvalancheCalculator
 
   def calculate_payments(loans, sum)
     total_debt = loans.map { |loan| loan[:amount] }.sum
+    month_number = 0
+    result = []
 
     while total_debt > 0
-      total_debt = MonthCalculator.new(loans, sum).call
+      calculated_month = MonthCalculator.new(loans, sum).call
+
+      total_debt = calculated_month[:sum]
+      month_loans = calculated_month[:loans]
+      month_number += 1
+
+      month = { month_number: month_number, loans: month_loans }
+
+      result << month
     end
 
-    total_debt <= 0 ? 0 : total_debt
+    result
   end
 end

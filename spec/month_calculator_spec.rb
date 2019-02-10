@@ -27,25 +27,27 @@ RSpec.describe MonthCalculator do
       }
     end
 
-    it "calculates payments kate loan" do
-      loans = [kate_loan, alfa_loan, halva_loan]
-      calculator = MonthCalculator.new(loans, sum).call
+    describe 'Reducing loans by payment size' do
+      it "for kate" do
+        loans = [kate_loan, alfa_loan, halva_loan]
+        calculator = MonthCalculator.new(loans, sum).call
 
-      expect(kate_loan[:amount]).to eq(19_200)
-    end
+        expect(kate_loan[:amount]).to eq(19_200)
+      end
 
-    it "calculates payments for alfa loan" do
-      loans = [kate_loan, alfa_loan, halva_loan]
-      calculator = MonthCalculator.new(loans, sum).call
+      it "for alfa" do
+        loans = [kate_loan, alfa_loan, halva_loan]
+        calculator = MonthCalculator.new(loans, sum).call
 
-      expect(alfa_loan[:amount]).to eq(33_500)
-    end
+        expect(alfa_loan[:amount]).to eq(33_500)
+      end
 
-    it "calculates payments for halva loan" do
-      loans = [kate_loan, alfa_loan, halva_loan]
-      calculator = MonthCalculator.new(loans, sum).call
+      it "for halva" do
+        loans = [kate_loan, alfa_loan, halva_loan]
+        calculator = MonthCalculator.new(loans, sum).call
 
-      expect(halva_loan[:amount]).to eq(113_500)
+        expect(halva_loan[:amount]).to eq(113_500)
+      end
     end
   end
 end

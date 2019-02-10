@@ -17,24 +17,27 @@ class MonthCalculator
       sum = split_sum(loans, sum)
     end
 
-    loans.inject(0) { |memo, loan| memo + loan[:amount] }
+    recalculated_sum = loans.inject(0) { |memo, loan| memo + loan[:amount] }
+
+    {
+      sum: recalculated_sum,
+      loans: loans
+    }
   end
 
   def split_sum(loans, sum)
-    if sum > 0
-      loans.each do |loan|
-        if sum > loan[:payment]
-          loan[:amount] -= loan[:payment]
-          sum -= loan[:payment]
-        else
-          loan[:amount] -= sum
-          sum = 0
-        end
+    loans.each do |loan|
+      if sum > loan[:payment]
+        loan[:amount] -= loan[:payment]
+        sum -= loan[:payment]
+      else
+        loan[:amount] -= sum
+        sum = 0
+      end
 
-        if loan == loans.last
-          loan[:amount] -= sum
-          sum = 0
-        end
+      if loan == loans.last
+        loan[:amount] -= sum
+        sum = 0
       end
     end
 

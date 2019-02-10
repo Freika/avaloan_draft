@@ -2,25 +2,25 @@ require './avalanche_calculator'
 RSpec.describe AvalancheCalculator do
   describe "#call" do
     let(:sum) { 15_000 }
-    let(:kate_loan) do
+    let(:first_loan) do
       {
-        title: 'Kate',
+        title: 'Loan #1',
         payment: 3_800,
         percent: 10,
         amount: 23_000
       }
     end
-    let(:alfa_loan) do
+    let(:second_loan) do
       {
-        title: 'Alfa',
+        title: 'Loan #2',
         payment: 2_500,
         percent: 16,
         amount: 36_000
       }
     end
-    let(:halva_loan) do
+    let(:third_loan) do
       {
-        title: 'Halva',
+        title: 'Loan #3',
         payment: 7_200,
         percent: 19,
         amount: 122_200
@@ -28,10 +28,12 @@ RSpec.describe AvalancheCalculator do
     end
 
     it "calculates all payments" do
-      loans = [kate_loan, alfa_loan, halva_loan]
-      total_debt = AvalancheCalculator.new(loans, sum).call
+      loans = [first_loan, second_loan, third_loan]
+      calculated_loans = AvalancheCalculator.new(loans, sum).call
 
-      expect(total_debt).to eq(0)
+      p calculated_loans
+
+      # expect(total_Loan).to eq(0)
     end
   end
 end
