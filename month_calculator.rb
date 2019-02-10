@@ -1,3 +1,5 @@
+# Splits available sum between all loans, starting from cheapest
+# to most expensive, which gets full snowball
 class MonthCalculator
   def initialize(loans, sum)
     @loans = loans.sort_by { |loan| loan[:percent] } # cheaper is earlier
@@ -14,6 +16,8 @@ class MonthCalculator
     while sum > 0 do
       sum = split_sum(loans, sum)
     end
+
+    loans.inject(0) { |memo, loan| memo + loan[:amount] }
   end
 
   def split_sum(loans, sum)

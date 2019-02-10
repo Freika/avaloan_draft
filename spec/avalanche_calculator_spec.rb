@@ -31,7 +31,6 @@ RSpec.describe AvalancheCalculator do
       loans = [kate_loan, alfa_loan, halva_loan]
       total_debt = AvalancheCalculator.new(loans, sum).call
 
-
       expect(total_debt).to eq(0)
     end
   end

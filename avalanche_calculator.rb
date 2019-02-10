@@ -18,5 +18,7 @@ class AvalancheCalculator
     while total_debt > 0
       total_debt = MonthCalculator.new(loans, sum).call
     end
+
+    total_debt <= 0 ? 0 : total_debt
   end
 end
